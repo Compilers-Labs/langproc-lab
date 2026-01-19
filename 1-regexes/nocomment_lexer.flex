@@ -10,7 +10,59 @@ extern "C" int fileno(FILE *stream);
 
 %}
 
+%x ESCID
+%x ATTR 
+
 %%
+
+<INITIAL>[\n][ ]"//"[^(\n)]*[\n] {
+    return LineComment;
+}
+
+<INITIAL>"//"[^\n]*[\n] {
+  return InlineComment;
+}
+
+
+<ATTR>[\n][ ]"//"[^(\n)]*[\n] {}
+
+<ATTR>"//"[^\n]*[\n] {}
+
+
+"(*" {
+    BEGIN(ATTR);
+}
+
+<ATTR>. {}
+<ATTR>\n {}
+
+<ATTR>"*)" {
+    BEGIN(INITIAL);
+    return LongComment;
+}
+
+"\\" {
+  yylval.sequence = yytext[0];
+  BEGIN(ESCID);
+}
+
+<ESCID>" "  {
+  yylval.sequence += yytext[0];
+  BEGIN(INITIAL);
+  return SlashedSection;
+}
+
+
+<ESCID>\n {
+  yylval.sequence += yytext[0];
+  BEGIN(INITIAL);
+  return SlashedSection;
+}
+ 
+
+<ESCID>. {
+  yylval.sequence += yytext[0];
+}
 
 . {
   yylval.character = yytext[0];
@@ -29,3 +81,6 @@ void yyerror (char const *s)
   fprintf (stderr, "Flex Error: %s\n", s);
   exit(1);
 }
+
+
+
