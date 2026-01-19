@@ -37,7 +37,7 @@ public:
     ) const override
     {
         // NOTE : This should be implemented by the inheriting function nodes, e.g. LogFunction
-        throw std::runtime_error("FunctionOperator::evaluate is not implemented.");
+        throw std::runtime_error("FunctionOperator::evaluate is not implemented. (josh)");
     }
 };
 
@@ -53,6 +53,13 @@ public:
     { return "log"; }
     
     // TODO-E : Override evaluate, and implement it
+
+    virtual double evaluate(
+        const std::map<std::string, double> &bindings
+        ) const override {
+      double va = getArg()->evaluate(bindings); 
+      return std::log(va);
+    }
 };
 
 class ExpFunction
