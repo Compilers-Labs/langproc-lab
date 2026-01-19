@@ -7,6 +7,8 @@
 TokenValue yylval;
 
 int main () { 
+  
+  int comments_removed = 0;
 
   while (1) {
 
@@ -17,19 +19,34 @@ int main () {
       
       break;
       
+    } else if (type == LineComment) {
+      comments_removed++;
+
+    } else if (type == InlineComment) {
+      
+      comments_removed++;
+
+    } else if (type == LongComment){
+
+      comments_removed++; 
+
+    } else if (type == SlashedSection) {
+      
+      std::cout << yylval.sequence;
+
     } else if (type == Other) {
 
       std::cout << yylval.character;
 
     } else {
-      
+        
       assert(0); // Error out!
       return 1;
       
     }
   }
 
-  std::cout << "Number of comments and attributes removed: 0.\n";
+  std::cout << "Number of comments and attributes removed: " << comments_removed << ".\n";
     
   return 0;
 }
