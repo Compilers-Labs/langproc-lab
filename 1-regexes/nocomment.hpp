@@ -7,13 +7,17 @@
 enum TokenType 
 {
   Eof,          // end of file
-  Other
+  Other,
+  InlineComment,
+  LineComment,
+  LongComment,
+  SlashedSection
 };
-
 // Some tokens can be associated with a value.
-union TokenValue
+struct TokenValue
 {
   char character;
+  std::string sequence;
 };
 
 // We will invoke our lexer by repeatedly calling yylex(). That
@@ -26,3 +30,4 @@ extern TokenValue yylval;
 
 
 #endif
+
