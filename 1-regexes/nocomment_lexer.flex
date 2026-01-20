@@ -12,65 +12,100 @@ extern "C" int fileno(FILE *stream);
 
 %x ESCID
 %x ATTR 
+%x COMMENT
+%x COMMENT_IN_ATTR
+%x ESCID_IN_ATTR
 
 %%
 
-<INITIAL>[\n][ ]"//"[^(\n)]*[\n] {
-    return LineComment;
+
+<INITIAL>"(*" {
+  yylval.attr_sequence = "(*";
+  BEGIN(ATTR);
 }
 
-<INITIAL>"//"[^\n]*[\n] {
-  return InlineComment;
+<INITIAL>"\\" {
+    yylval.escid_sequence = yytext[0];
+    BEGIN(ESCID);
 }
 
-
-<ATTR>[\n][ ]"//"[^(\n)]*[\n] {}
-
-<ATTR>"//"[^\n]*[\n] {}
-
-
-"(*" {
-    BEGIN(ATTR);
+<INITIAL>"//" {
+  BEGIN(COMMENT);
+  return AddCommentCount;
 }
 
-<ATTR>. {}
-<ATTR>\n {}
+<INITIAL>. {
+  yylval.character = yytext[0];
+  return DumpChar;
+}
+
+<ATTR>"\\" {
+  yylval.attr_sequence += yytext[0];
+  BEGIN(ESCID_IN_ATTR);
+}
+
+<ATTR>"//" {
+  BEGIN(COMMENT_IN_ATTR);
+}
 
 <ATTR>"*)" {
-    BEGIN(INITIAL);
-    return LongComment;
-}
-
-"\\" {
-  yylval.sequence = yytext[0];
-  BEGIN(ESCID);
-}
-
-<ESCID>" "  {
-  yylval.sequence += yytext[0];
   BEGIN(INITIAL);
-  return SlashedSection;
+  return AddCommentCount;
 }
 
+<ATTR>(.|\n) {
+  yylval.attr_sequence += yytext[0];
+}
 
-<ESCID>\n {
-  yylval.sequence += yytext[0];
+<ATTR>EOF {
+  return EofAttr; //dump sequence and reg eof
+}
+
+<COMMENT>. {}
+
+<COMMENT>\n {
   BEGIN(INITIAL);
-  return SlashedSection;
-}
- 
-
-<ESCID>. {
-  yylval.sequence += yytext[0];
 }
 
-. {
-  yylval.character = yytext[0];
-  return Other;
+<COMMENT>EOF {
+    return Eof;
 }
 
-EOF {
-  return Eof;
+<ESCID>[^ \n]  {
+  yylval.escid_sequence += yytext[0];
+}
+
+<ESCID>[ \n] {
+  yylval.escid_sequence += yytext[0];
+  BEGIN(INITIAL);
+  return DumpEscId; //dump sequence
+}
+
+<ESCID>EOF {
+  return EofEscId; //dump esc sequence and reg eof
+}
+
+<ESCID_IN_ATTR>[^ \n] {
+  yylval.attr_sequence += yytext[0];
+}
+
+<ESCID_IN_ATTR>[ \n] {
+  yylval.attr_sequence += yytext[0];
+  BEGIN(ATTR);
+}
+
+<ESCID_IN_ATTR>EOF {
+  return EofAttr; //dump sequence reg off
+}
+
+<COMMENT_IN_ATTR>. {}
+
+<COMMENT_IN_ATTR>\n {
+  BEGIN(ATTR);
+}
+
+<COMMENT_IN_ATTR>EOF {
+    return EofAttr; //dump seq reg off
 }
 
 %%

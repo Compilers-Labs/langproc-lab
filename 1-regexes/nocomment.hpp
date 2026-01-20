@@ -7,17 +7,18 @@
 enum TokenType 
 {
   Eof,          // end of file
-  Other,
-  InlineComment,
-  LineComment,
-  LongComment,
-  SlashedSection
+  EofAttr,
+  EofEscId,
+  DumpEscId,
+  DumpChar,
+  AddCommentCount
 };
 // Some tokens can be associated with a value.
 struct TokenValue
 {
   char character;
-  std::string sequence;
+  std::string escid_sequence;
+  std::string attr_sequence;
 };
 
 // We will invoke our lexer by repeatedly calling yylex(). That

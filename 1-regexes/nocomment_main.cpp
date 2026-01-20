@@ -19,24 +19,27 @@ int main () {
       
       break;
       
-    } else if (type == LineComment) {
-      comments_removed++;
+    } else if (type == EofAttr) {
 
-    } else if (type == InlineComment) {
+      std::cout << yylval.attr_sequence;
+      break;
+
+    } else if (type == EofEscId) {
       
-      comments_removed++;
+      std::cout << yylval.escid_sequence;
+      break;
 
-    } else if (type == LongComment){
-
-      comments_removed++; 
-
-    } else if (type == SlashedSection) {
+    } else if (type == DumpEscId){
       
-      std::cout << yylval.sequence;
+      std::cout << yylval.escid_sequence;
 
-    } else if (type == Other) {
-
+    } else if (type == DumpChar) {
+      
       std::cout << yylval.character;
+
+    } else if (type == AddCommentCount) {
+
+      comments_removed++;
 
     } else {
         
