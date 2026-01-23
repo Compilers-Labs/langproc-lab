@@ -22,6 +22,7 @@ int main () {
     } else if (type == EofAttr) {
 
       std::cout << yylval.attr_sequence;
+      comments_removed += pending_attr_comments;
       break;
 
     } else if (type == EofEscId) {
@@ -40,6 +41,16 @@ int main () {
     } else if (type == AddCommentCount) {
 
       comments_removed++;
+
+    } else if(type == EofAttrAndAdd){
+      
+      std::cout << "BLBALBLABLABLA";
+      comments_removed++;
+      break;
+
+    } else if (type == Eof) {
+
+      break;
 
     } else {
         
