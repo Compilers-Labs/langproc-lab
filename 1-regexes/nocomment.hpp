@@ -11,7 +11,8 @@ enum TokenType
   EofEscId,
   DumpEscId,
   DumpChar,
-  AddCommentCount
+  AddCommentCount,
+  EofAttrAndAdd
 };
 // Some tokens can be associated with a value.
 struct TokenValue
@@ -28,6 +29,9 @@ extern int yylex();
 // Each time our lexer identifies a token, it stores its value
 // (if relevant for the token type) into yylval.
 extern TokenValue yylval;
+
+// Track // comments inside unclosed attributes
+extern int pending_attr_comments;
 
 
 #endif
