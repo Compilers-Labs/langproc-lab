@@ -82,6 +82,7 @@ int32_t Interpret(
 
         
     } else if (program->type == "While") {
+
         int32_t cond = Interpret(content, program->branches.at(0));
         int32_t ret_val;
         while (cond != 0) {
@@ -90,6 +91,8 @@ int32_t Interpret(
             cond = Interpret(content, program->branches.at(0));
 
         }
+        return ret_val;
+
     } else {
         std::cout << "Unknown construct " << program->type << std::endl;
         throw std::runtime_error("Unknown construct '"+program->type+"'");
