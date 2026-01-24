@@ -41,18 +41,33 @@ int32_t Interpret(
 
     } else if (program->type == "Seq") {
 
-        std::vector<int32_t> seq_vals;
         for (int i{}; i < program->branches.size(); i++){
             int32_t val = Interpret(context, program->branches.at(i));
-            seq_vals.push_back(seq_vals);
         }
-        //?? something like this?
+        return val;
+        //chat says this
         
     } else if (program->type == "LessThan") {
-        
+
+        int32_t l_val = Interpret(context, program->branches.at(0));
+        int32_t r_val = Interpret(context, program->branches.at(1));
+
+        if (l_val < r_val) return 1;
+        else return 0;
+
     } else if (program->type == "Add") {
 
+        int32_t l_val = Interpret(context, program->branches.at(0));
+        int32_t r_val = Interpret(context, program->branches.at(1));
+        
+        return l_val + r_val;
+
     } else if (program->type == "Sub") {
+
+        int32_t l_val = Interpret(context, program->branches.at(0));
+        int32_t r_val = Interpret(context, program->branches.at(1));
+        
+        return l_val - r_val;
 
     } else if (program->type == "If") {
 
