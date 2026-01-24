@@ -8,6 +8,7 @@ int32_t Interpret(
 ){
     std::regex reNum("^-?[0-9]+$");
     std::regex reId("^[a-z][a-z0-9]*$");
+    int input_use_count{};
     
     if( regex_match(program->type, reNum) ){
 
@@ -83,17 +84,23 @@ int32_t Interpret(
         
     } else if (program->type == "While") {
 
-        int32_t cond = Interpret(content, program->branches.at(0));
+        int32_t cond = Interpret(context, program->branches.at(0));
         int32_t ret_val;
         while (cond != 0) {
             
-            int32_t ret_val = Interpret(content, program->branches.at(1));
-            cond = Interpret(content, program->branches.at(0));
+            int32_t ret_val = Interpret(context, program->branches.at(1));
+            cond = Interpret(context, program->branches.at(0));
 
         }
         return ret_val;
 
-    } else {
+    } else if (program->type == "Input") {
+
+        int32_t val;  
+        std::cin >> val;
+        return val;
+            
+    }  else {
         std::cout << "Unknown construct " << program->type << std::endl;
         throw std::runtime_error("Unknown construct '"+program->type+"'");
     }
