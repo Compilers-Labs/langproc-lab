@@ -40,6 +40,13 @@ int32_t Interpret(
         return val;
 
     } else if (program->type == "Seq") {
+
+        std::vector<int32_t> seq_vals;
+        for (int i{}; i < program->branches.size(); i++){
+            int32_t val = Interpret(context, program->branches.at(i));
+            seq_vals.push_back(seq_vals);
+        }
+        //?? something like this?
         
     } else if (program->type == "LessThan") {
         
