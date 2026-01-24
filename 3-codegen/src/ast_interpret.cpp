@@ -39,7 +39,19 @@ int32_t Interpret(
         context.bindings[program->value] = val;
         return val;
 
-    }else{
+    } else if (program->type == "Seq") {
+        
+    } else if (program->type == "LessThan") {
+        
+    } else if (program->type == "Add") {
+
+    } else if (program->type == "Sub") {
+
+    } else if (program->type == "If") {
+
+    } else if (program->type == "While") {
+
+    } else {
         std::cout << "Unknown construct " << program->type << std::endl;
         throw std::runtime_error("Unknown construct '"+program->type+"'");
     }
