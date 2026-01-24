@@ -18,7 +18,6 @@ int32_t Interpret(
     }else if(regex_match(program->type, reId) ){
       
         //we have to think of a few cases here, if a variable is mentioned we should return its mapping but if it is assigned or updated this could mean different things...
-        std::cout << "value were binding is: " << program->type << std::endl;
         return context.bindings[program->type];
 
     }else if(program->type=="Param"){
@@ -34,15 +33,15 @@ int32_t Interpret(
     // TODO: Handle other constructs
     
     }else if (program->type == "Assign") { //assining the interpert value of the next branch to the variable bindings
-        std::cout << "found da assign ting\n" << std::endl;
+
         int32_t val = Interpret(context, program->branches.at(0));
         context.bindings[program->value] = val;
         return val;
 
     } else if (program->type == "Seq") {
-
+        int32_t val;
         for (int i{}; i < program->branches.size(); i++){
-            int32_t val = Interpret(context, program->branches.at(i));
+            val = Interpret(context, program->branches.at(i));
         }
         return val;
         //chat says this
@@ -70,9 +69,27 @@ int32_t Interpret(
         return l_val - r_val;
 
     } else if (program->type == "If") {
+        
+        int32_t cond = Interpret(context, program->branches.at(0));
+        int32_t ret_val;
+        if (cond != 0){
+            ret_val = Interpret(context, program->branches.at(1));
+        } else {
+            ret_val = Interpret(context, program->branches.at(2));
+        }
 
+        return ret_val;
+
+        
     } else if (program->type == "While") {
+        int32_t cond = Interpret(content, program->branches.at(0));
+        int32_t ret_val;
+        while (cond != 0) {
+            
+            int32_t ret_val = Interpret(content, program->branches.at(1));
+            cond = Interpret(content, program->branches.at(0));
 
+        }
     } else {
         std::cout << "Unknown construct " << program->type << std::endl;
         throw std::runtime_error("Unknown construct '"+program->type+"'");
