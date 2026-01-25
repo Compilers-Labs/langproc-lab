@@ -36,10 +36,26 @@ void CompileRec(
         for(unsigned i=0; i<program->branches.size(); i++){
             CompileRec(destReg, program->branches[i]);
         } 
-    
+    }
     // TODO : handle the others
-        
-    } else{
+    else if (program->type == "Output"){
+
+    } else if (program->type == "Assign"){
+
+    } else if (program->type == "Input"){
+
+    } else if (program->type == "Add"){
+
+    } else if (program->type == "Sub"){
+
+
+    } else if (program->type == "LessThan"){
+
+    } else if (program->type == "If"){
+
+    } else if (program->type == "While"){
+
+    }else 
         throw std::runtime_error("Unknown construct '"+program->type+"'");
     }
 }
