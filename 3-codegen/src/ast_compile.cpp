@@ -18,24 +18,28 @@ void CompileRec(
     std::regex reId("^[a-z][a-z0-9]*$");
     
     if( regex_match( program->type, reNum ) ){
-        std::cout<<"const "<<destReg<<" "<<program->type<<std::endl;
+
+        std::cout << "const " << destReg << " " << program->type << std::endl;
         
-    }else if( regex_match( program->type, reId ) ){
-        std::string zero = makeName("zero");
-        std::cout<<"const "<<zero<<" 0"<<std::endl;
-        std::cout<<"add "<<destReg<<" "<<program->type<<" "<<zero<<std::endl;
+    } else if( regex_match( program->type, reId ) ){
+        
+        std::string zero = makeName("zero"); // string _zero_{i} where i is the index of the register?
+        std::cout << "const " << zero << " 0" << std::endl;
+        std::cout << "add " << destReg << " " << program->type << " " << zero << std::endl;
 
-    }else if(program->type=="Param"){
-        std::cout<<"param "<<destReg<<" "<<program->value<<std::endl;
+    } else if(program->type=="Param"){
 
-    }else if(program->type=="Seq"){
+        std::cout << "param " << destReg << " " << program->value << std::endl;
+
+    } else if(program->type=="Seq"){
+
         for(unsigned i=0; i<program->branches.size(); i++){
             CompileRec(destReg, program->branches[i]);
-        }
+        } 
     
     // TODO : handle the others
         
-    }else{
+    } else{
         throw std::runtime_error("Unknown construct '"+program->type+"'");
     }
 }
@@ -50,5 +54,5 @@ void Compile(
     CompileRec(res, program);
     
     // Put the result out
-    std::cout<<"halt "<<res<<"\n";
+    std::cout << "halt " << res << "\n";
 }
