@@ -46,6 +46,10 @@ void CompileRec(
                                          //
     } else if (program->type == "Assign"){
 
+        
+        std::string var = makeName(program->value);
+        CompileRec(var, program->branches.at(0));
+
 
     } else if (program->type == "Input"){
 
