@@ -40,16 +40,28 @@ void CompileRec(
     // TODO : handle the others
     else if (program->type == "Output"){
 
-//is this needed?
         CompileRec(destReg, program->branches.at(0));
-        std::cout<< destReg <<std::endl; // value
+        std::cout << "output "<< destReg <<std::endl; // value
                                          //
     } else if (program->type == "Assign"){
         
-        std::string var = makeName(program->value);
+        std::string var = program->value;
         CompileRec(var, program->branches.at(0));
 
+        std::string zero = makeName("zero");
+        std::cout << "const " << zero << " 0" << std::endl;
+
+        std::cout << "add " << destReg << " "  << var << " " << zero << std::endl;
+
     } else if (program->type == "Input"){
+        
+        std::string var = program->value;
+
+        std::string zero = makeName("zero");
+        std::cout << "const " << zero << " 0" << std::endl;
+
+        std::cout << "input " << var;
+        std::cout << "add " << destReg << " "  << var << " " << zero << std::endl;
 
     } else if (program->type == "Add"){
 
@@ -77,7 +89,7 @@ void CompileRec(
 
     } else if (program->type == "While"){
 
-    }else 
+    } else {
         throw std::runtime_error("Unknown construct '"+program->type+"'");
     }
 }
