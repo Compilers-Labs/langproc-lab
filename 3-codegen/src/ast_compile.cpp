@@ -63,6 +63,13 @@ void CompileRec(
 
     } else if (program->type == "Sub"){
 
+        std::string left = makeName("left");
+        std::string right = makeName("right");
+        
+        CompileRec(left, program->branges.at(0));
+        CompileRec(right, program->branches.at(1));
+
+        std::cout << "sub " << destReg << " "  << left << " " << right << std::endl;
 
     } else if (program->type == "LessThan"){
 
