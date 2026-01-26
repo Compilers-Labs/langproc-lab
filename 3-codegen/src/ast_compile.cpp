@@ -55,13 +55,7 @@ void CompileRec(
 
     } else if (program->type == "Input"){
         
-        std::string var = program->value;
-
-        std::string zero = makeName("zero");
-        std::cout << "const " << zero << " 0" << std::endl;
-
-        std::cout << "input " << var;
-        std::cout << "add " << destReg << " "  << var << " " << zero << std::endl;
+        std::cout << "input " << destReg << std::endl;
 
     } else if (program->type == "Add"){
 
@@ -87,7 +81,6 @@ void CompileRec(
 
         std::string left = makeName("left");
         std::string right = makeName("right");
-        std::string res = makeName("res");
         
         CompileRec(left, program->branches.at(0));
         CompileRec(right, program->branches.at(1));
@@ -95,6 +88,26 @@ void CompileRec(
         std::cout << "lt " << destReg << " "  << left << " " << right << std::endl;
 
     } else if (program->type == "If"){
+       
+        std::string cond = makeName("cond");
+        std::string cond_label = makeName("cond_label");
+        std::string end_label = makeName("end");
+
+        std::string zero = makeName("zero");
+        std::cout << "const " << zero << " 0" << std::endl;
+
+        CompileRec(cond, program->branches.at(0));
+
+        std::cout << "beq " << cond << " " << zero << " " << cond_label << std::endl;
+        CompileRec(destReg, program->branches.at(1));
+
+        std::cout << "beq " << zero << " " << zero << " " << end_label << std::endl;
+
+        std::cout << ":" << cond_label << std::endl;
+        CompileRec(destReg, program->branches.at(2));
+
+        std::cout << ":" << end_label << std::endl;
+         
 
     } else if (program->type == "While"){
 
