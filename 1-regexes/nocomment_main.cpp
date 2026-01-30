@@ -44,7 +44,6 @@ int main () {
 
     } else if(type == EofAttrAndAdd){
       
-      std::cout << "BLBALBLABLABLA";
       comments_removed++;
       break;
 
